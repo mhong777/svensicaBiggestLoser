@@ -1,0 +1,85 @@
+<section data-ng-controller="WeightindexController">
+<!--
+    {{gvars}}
+    <br/><br/>
+    {{userData}}
+    <br/><br/>    
+    {{updatedUser}}
+    <br/><br/>
+    {{weeksFinished}} {{weekNum}}
+    <br/><br/>
+    {{weightInput}}
+    <br/><br/>
+-->
+    <div class="row topRow">
+        <div class="col-md-4">
+            <h3><center>Standings</center></h3>       
+            <table class="table table-striped">
+               <thead>
+                   <tr>
+                       <td>Place</td>
+                       <td>Name</td>
+                       <td>Progress</td>
+                   </tr>
+               </thead>
+                <tbody>
+                    <tr ng-repeat="weight in weightHistory | limitTo:weekNum-1">
+                        <td>$index</td>
+                        <td>name</td>
+                        <td>Week {{$index+1}}: {{weight}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-md-8" id="weightEnter">
+            <span>Enter Weight for Week {{weekNum}}</span><br/>
+            <input type="number" id="weightInput" name="weightInput" data-ng-model="weightInput"><br/>        
+            <button class="btn btn-large btn-primary" ng-click="addWeight()">Submit</button>
+        </div>            
+    </div>
+    
+    <div class="row topRow">
+        <div class="col-md-4">
+            <h3><center>My Progress</center></h3>
+            <table class="table table-striped progressTable">
+               <thead>
+                   <tr>
+                       <td>Week</td>
+                       <td>Weight</td>
+                       <td>Progress</td>
+                   </tr>
+               </thead>
+                <tbody>
+                    <tr ng-repeat="weight in weightHistory | limitTo:weekNum-1">
+                        <td>{{$index+1}}</td>
+                        <td>{{weight}}</td>
+                        <td>1</td>
+                    </tr>
+                </tbody>
+            </table>            
+        </div>
+        <div class="col-md-8">
+            graph goes here
+            <nvd3-line-chart
+                data="exampleData"
+                showXAxis="true"
+                showYAxis="true"
+                tooltips="true"
+                interactive="true">
+            </nvd3-line-chart>                
+        </div>
+    </div>
+   
+   
+   
+   
+   
+<!--
+    <button class="btn btn-large btn-primary" ng-click="testFunction()">TestFxn</button>
+    <br/><br/>
+    {{graphData}}
+    <br/><br/>
+    {{exampleData}}
+-->
+    
+</section>

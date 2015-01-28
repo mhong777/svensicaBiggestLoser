@@ -1,0 +1,6 @@
+{
+    "jscodehints.detectedExclusions": [
+        "/Users/hong/Desktop/svensicaBiggestLoser/public/lib/socket.io-client/socket.io.js",
+        "/Users/hong/Desktop/svensicaBiggestLoser/public/lib/nvd3/nv.d3.min.js"
+    ]
+}
