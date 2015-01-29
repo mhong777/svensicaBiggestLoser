@@ -6,7 +6,7 @@ var mongoose = require('mongoose'),
     Gvar = mongoose.model('Gvar'),
 	_ = require('lodash');
     
-
+var totalWeeks=10;
     
         
     io.on('connection', function(socket){
@@ -64,34 +64,91 @@ var mongoose = require('mongoose'),
                 if (err) {
                     console.log(err);
                 } else {
-                    io.emit('setUserData', participants[0]);
+                    var parti={},
+                        myStats=[],
+                        inputData={},
+                        x,
+                        userOutput={};
+                    for(x=0; x<participants[0].weightHistory.length; x++){
+                        inputData={};
+                        inputData.weight=participants[0].weightHistory[x];
+                        inputData.progress=((1-participants[0].graphNumbers[x])*100).toFixed(2);
+                        myStats.push(inputData);
+                    }
+                    parti.user=participants[0];
+                    parti.myStats=myStats;
+//                    console.log(parti);
+                    
+                    io.emit('setUserData', parti);
                 }
             }).then(function(){
                 //MAKE THE GRAPH INFO
-                Participant.find({},{name:1, graphNumbers:1, _id:0}).exec(function(err, participants){
+                Participant.find({},{name:1, graphNumbers:1, points:1, _id:0}).exec(function(err, participants){
                    if(err){
                        console.log(err);
                    } 
                     else{
                         var newUserData={},
                             newArray=[],
-                            newValue={},
+                            newValue=[],
                             myUser,
-                            allData=[];
-                        for(var x=0; x<participants.length; x++){
+                            allData=[],
+                            x,
+                            y,
+                            newUser={},
+                            userStats=[],
+                            output={},
+                            arr=[],
+                            sorted,
+                            ranks;
+                        for(x=0; x<1; x++){//participants.length; x++){
+                            //for graph
                             myUser=participants[x];
                             newUserData={};
                             newArray=[];
-                            for(var y=0; y<myUser.graphNumbers.length; y++){
-                                newValue.x=y+1;
-                                newValue.y=myUser.graphNumbers[y];
+                            newUserData.key=myUser.name;                            
+                            for(y=0; y<myUser.graphNumbers.length; y++){
+                                newValue=[];
+                                newValue=[y+1,parseFloat(((1-myUser.graphNumbers[y])*100).toFixed(2))];
                                 newArray.push(newValue);
                             }
                             newUserData.values=newArray;
-                            newUserData.key=myUser.name;
                             allData.push(newUserData);
+                            
+                            //for table
+                            newUser={};
+                            newUser.name=myUser.name;
+                            newUser.points=myUser.points;
+                            arr.push(myUser.points);
+                            newUser.progress=((1-myUser.graphNumbers[myUser.graphNumbers.length-1])*100).toFixed(2);
+                            userStats.push(newUser);
                         }
-                        io.emit('sendUserGraph', allData);
+                        
+                        
+                        //do the ranks
+                        sorted = arr.slice().sort(function(a,b){return b-a});
+                        ranks = arr.slice().map(function(v){ return sorted.indexOf(v)+1 });
+                        for(x=0; x<userStats.length; x++){
+                            userStats[x].rank=ranks[x];
+                        }
+                        
+                        console.log(userStats);
+                        
+                        //benchmark values
+                        newUserData={};
+                        newArray=[];
+                        newUserData.key='Goal';                        
+                        for(var x=0; x<totalWeeks; x++){
+                            newValue=[];
+                            newValue=[x+1,100];
+                            newArray.push(newValue);
+                        }
+                        newUserData.values=newArray;
+//                        allData.push(newUserData);
+                        
+                        output.graphData=allData;
+                        output.userStats=userStats;
+                        io.emit('sendUserGraph', output);
                     }
                 });            
             });

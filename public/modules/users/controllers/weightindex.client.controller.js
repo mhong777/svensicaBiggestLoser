@@ -20,7 +20,8 @@ angular.module('users').controller('WeightindexController', ['$scope', '$statePa
         }        
         
         socket.on('setUserData', function (data) {
-            $scope.userData = data;
+            $scope.userData = data.user;
+            $scope.myStats=data.myStats;
             
             //have to spell this out for ng-repeat
             $scope.weightHistory=$scope.userData.weightHistory;
@@ -35,7 +36,9 @@ angular.module('users').controller('WeightindexController', ['$scope', '$statePa
         });        
         
         socket.on('sendUserGraph', function (data) {
-            $scope.graphData=data;
+//            $scope.graphData=data;
+            $scope.graphData=data.graphData;
+            $scope.userStats=data.userStats;
             $scope.$digest();
         });
         

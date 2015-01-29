@@ -1,46 +1,7 @@
 <section data-ng-controller="WeightindexController">
-<!--
-    {{gvars}}
-    <br/><br/>
-    {{userData}}
-    <br/><br/>    
-    {{updatedUser}}
-    <br/><br/>
-    {{weeksFinished}} {{weekNum}}
-    <br/><br/>
-    {{weightInput}}
-    <br/><br/>
--->
     <div class="row topRow">
-        <div class="col-md-4">
-            <h3><center>Standings</center></h3>       
-            <table class="table table-striped">
-               <thead>
-                   <tr>
-                       <td>Place</td>
-                       <td>Name</td>
-                       <td>Progress</td>
-                   </tr>
-               </thead>
-                <tbody>
-                    <tr ng-repeat="weight in weightHistory | limitTo:weekNum-1">
-                        <td>$index</td>
-                        <td>name</td>
-                        <td>Week {{$index+1}}: {{weight}}</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-        <div class="col-md-8" id="weightEnter">
-            <span>Enter Weight for Week {{weekNum}}</span><br/>
-            <input type="number" id="weightInput" name="weightInput" data-ng-model="weightInput"><br/>        
-            <button class="btn btn-large btn-primary" ng-click="addWeight()">Submit</button>
-        </div>            
-    </div>
-    
-    <div class="row topRow">
-        <div class="col-md-4">
-            <h3><center>My Progress</center></h3>
+        <h3>My Progress</h3>    
+        <div class="col-md-4">            
             <table class="table table-striped progressTable">
                <thead>
                    <tr>
@@ -50,18 +11,47 @@
                    </tr>
                </thead>
                 <tbody>
-                    <tr ng-repeat="weight in weightHistory | limitTo:weekNum-1">
+                    <tr ng-repeat="stat in myStats">
                         <td>{{$index+1}}</td>
-                        <td>{{weight}}</td>
-                        <td>1</td>
+                        <td>{{stat.weight}}</td>
+                        <td>{{stat.progress}}%</td>
                     </tr>
                 </tbody>
             </table>            
+        </div>        
+        <div class="col-md-8" id="weightEnter">
+            <span>Enter Weight for Week {{weekNum}}</span><br/>
+            <input type="number" id="weightInput" name="weightInput" data-ng-model="weightInput"><br/>        
+            <button class="btn btn-large btn-primary" ng-click="addWeight()">Submit</button>
+        </div>            
+    </div>
+    
+    <div class="row topRow">
+        <h3>Standings</h3>       
+        <div class="col-md-4">
+            
+            <table class="table table-striped">
+               <thead>
+                   <tr>
+                       <td>Place</td>
+                       <td>Name</td>                       
+                       <td>Progress</td>
+                       <td>Points</td>
+                   </tr>
+               </thead>
+                <tbody>
+                    <tr ng-repeat="user in userStats">
+                        <td>{{user.rank}}</td>
+                        <td>{{user.name}}</td>
+                        <td>{{user.progress}}%</td>
+                        <td>{{user.points}}</td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
         <div class="col-md-8">
-            graph goes here
             <nvd3-line-chart
-                data="exampleData"
+                data="graphData"
                 showXAxis="true"
                 showYAxis="true"
                 tooltips="true"
@@ -70,16 +60,9 @@
         </div>
     </div>
    
-   
-   
-   
-   
-<!--
-    <button class="btn btn-large btn-primary" ng-click="testFunction()">TestFxn</button>
     <br/><br/>
     {{graphData}}
     <br/><br/>
     {{exampleData}}
--->
     
 </section>
