@@ -47,7 +47,10 @@ var ParticipantSchema = new Schema({
         type: Number,
         min: 0,
         default: 0
-    }
+    },
+    pointArray:[
+        {type: Number}
+    ]
 });
 
 mongoose.model('Participant', ParticipantSchema);

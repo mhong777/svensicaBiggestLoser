@@ -6,9 +6,65 @@ var mongoose = require('mongoose'),
     Gvar = mongoose.model('Gvar'),
 	_ = require('lodash');
     
-var totalWeeks=10;
+var totalWeeks=16,
+    today,
+    gvar,
+    startDate = new Date(2015, 1, 16),
+    ONE_WEEK = 1000 * 60 * 60 * 24 * 7,
+    difference,
+    currentWeek;
+    startDate=startDate.getTime();
     
-        
+/*****
+TIMER FUNCTION
+    need to just combine the if date 
+    db.gvars.insert({name: 'vars', week:1})
+    
+    db.gvars.remove({})
+    
+    db.dropDatabase()
+*****/
+var intervalId = setInterval(function() {
+    today = new Date(); // Create a Date object to find out what time it is
+    if(today.getHours() === 4){ // Check the time and iterate at 4am - need to ping every hour
+        Gvar.find().exec(function(err, gvars) {
+            if (err) {
+                console.log(err);
+            } else {
+                gvar=gvars[0];
+                
+                //check what week it is
+                today=today.getTime();
+                
+                //case if challenge hasn't started
+                if(startDate>today){
+                    gvar.week=1;
+                }
+                else{
+                    //calculate week
+                    difference=Math.floor(Math.abs(today-startDate)/ONE_WEEK);
+                    gvar.week=difference+1;
+                }
+                
+                if(difference===16){
+                    clearInterval(intervalId);
+                }
+                else{
+                    gvar.save(function(err){
+                        if(err){
+                            console.log(err);
+                        }
+                    });
+                    console.log(gvar);
+                    socket.broadcast.emit('newWeek', gvar);                    
+                }
+            }
+        });    
+    }    
+}, 600000);  //pings every hour
+//600000    
+    
+    
     io.on('connection', function(socket){
         
         socket.broadcast.emit('user connected');
@@ -23,7 +79,6 @@ var totalWeeks=10;
         *****/
         socket.on('setInitialWeight', function(input){
             //get selected owner
-            console.log(input);
             Participant.find({name:input.userId}).exec(function(err, participants) {
                 if (err) {
                     console.log(err);
@@ -58,7 +113,201 @@ var totalWeeks=10;
         /****
         GET DATA AND CREATE DATA STRUCTURE FOR GRAPH
         ****/        
-        socket.on('getUserData', function(input){
+//        socket.on('getUserData', function(input){
+//            customGetFxn(input);
+//        });        
+        
+
+        socket.on('getGraphData', function(){
+            Participant.find({},{name:1, graphNumbers:1, points:1, _id:0}).exec(function(err, participants){
+               if(err){
+                   console.log(err);
+               } 
+                else{
+                    var newUserData={},
+                        newArray=[],
+                        newValue=[],
+                        myUser,
+                        allData=[],
+                        x,
+                        y,
+                        newUser={},
+                        userStats=[],
+                        output={},
+                        arr=[],
+                        sorted,
+                        ranks;
+                    for(x=0; x<participants.length; x++){
+                        //for graph
+                        myUser=participants[x];
+                        newUserData={};
+                        newArray=[];
+                        newUserData.key=myUser.name;                            
+                        for(y=0; y<myUser.graphNumbers.length; y++){
+                            newValue=[];
+//                            newValue=[y+1,parseFloat(((1-myUser.graphNumbers[y])*100).toFixed(2))];
+                            newValue=[y+1,myUser.graphNumbers[y]];
+                            newArray.push(newValue);
+                        }
+                        newUserData.values=newArray;
+                        allData.push(newUserData);
+
+                        //for table
+                        newUser={};
+                        newUser.name=myUser.name;
+                        newUser.points=myUser.points;
+                        arr.push(myUser.points);
+                        newUser.progress=myUser.graphNumbers[myUser.graphNumbers.length-1];
+//                            ((1-myUser.graphNumbers[myUser.graphNumbers.length-1])*100).toFixed(2);
+                        userStats.push(newUser);
+                    }
+
+
+                    //do the ranks
+                    sorted = arr.slice().sort(function(a,b){return b-a});
+                    ranks = arr.slice().map(function(v){ return sorted.indexOf(v)+1 });
+                    for(x=0; x<userStats.length; x++){
+                        userStats[x].rank=ranks[x];
+                    }
+
+                    //benchmark values
+                    newUserData={};
+                    newArray=[];
+                    newUserData.key='Goal';                        
+                    for(var x=0; x<totalWeeks; x++){
+                        newValue=[];
+                        newValue=[x+1,100];
+                        newArray.push(newValue);
+                    }
+                    newUserData.values=newArray;
+                    allData.push(newUserData);
+
+                    output.graphData=allData;
+                    output.userStats=userStats;
+                    io.emit('sendUserGraph', output);
+                }
+            });  
+        });        
+                
+        
+        
+        /****
+        ADD WEIGHT TO A USER
+            NEED TO ADD TO WEIGHT HISTORY AND GRAPH NUMBERS
+            SEND BACK UPDATED USER DATA
+            HAVE THE CLIENT UPDATE THE GRAPH DATA AND DIGEST
+        ****/
+        socket.on('addWeight', function(input){
+            Gvar.find().exec(function(err, gvars) {
+                if (err) {
+                    console.log(err);
+                } else {
+                    currentWeek=gvars[0].week;
+                    
+                    
+                    //calculate points and add to user
+                    Participant.findById(input.userId).exec(function(err, parti) {
+                        if (err) {
+                            console.log(err);
+                        } else {
+                            console.log('week ' + currentWeek);
+                            console.log(parti);
+                            //######TODO
+                            //need to add points - make sure you don't double tap
+                            //need a way to track
+                            //or only let ppl put in their weight once
+                            if(currentWeek===4){
+                                if(input.weightInput<=parti.milestones[0]){
+                                    parti.pointArray.splice(0,1,5);
+                                }
+                                else{
+                                    parti.pointArray.splice(0,1,0);
+                                }                                
+                            }
+                            else if(currentWeek>4 && currentWeek<8){
+                                //5 6 7
+                                if(input.weightInput<=parti.milestones[0]){
+                                    parti.pointArray.splice(currentWeek-4,1,0);
+                                }
+                                else{
+                                    parti.pointArray.splice(currentWeek-4,1,-1);
+                                }                                
+                            }
+                            else if(currentWeek===8){
+                                if(input.weightInput<=parti.milestones[1]){
+                                    parti.pointArray.splice(4,1,5);
+                                }
+                                else{
+                                    parti.pointArray.splice(4,1,0);
+                                }                                
+                            }
+                            else if(currentWeek>8 && currentWeek<12){
+                                if(input.weightInput<=parti.milestones[1]){
+                                    parti.pointArray.splice(currentWeek-8+4,1,0);
+                                }
+                                else{
+                                    parti.pointArray.splice(currentWeek-8+4,1,-1);
+                                }                                
+                            }
+                            else if(currentWeek===12){
+                                if(input.weightInput<=parti.milestones[2]){
+                                    parti.pointArray.splice(8,1,5);
+                                }
+                                else{
+                                    parti.pointArray.splice(8,1,0);
+                                }                                                                
+                            }
+                            else if(currentWeek>12 && currentWeek<16){
+                                if(input.weightInput<=parti.milestones[2]){
+                                    parti.pointArray.splice(currentWeek-12+8,1,0);
+                                }
+                                else{
+                                    parti.pointArray.splice(currentWeek-12+8,1,-1);
+                                }                                
+                            }
+                            else if(currentWeek===16){
+                                if(input.weightInput<=parti.milestones[3]){
+                                    parti.pointArray.splice(16,1,5);
+                                }
+                                else{
+                                    parti.pointArray.splice(16,1,0);
+                                }                                
+                            }
+                            parti.weightHistory.splice(input.week-1, 1,input.weightInput);
+                            parti.graphNumbers.splice(input.week-1,1,parseFloat(input.weightInput/parti.startingWeight));
+                            
+                            var ptot=0;
+                            for(var z=0; z<parti.pointArray.length; z++){
+                                ptot+=parti.pointArray[z];
+                            }
+                            parti.points=ptot;
+                            
+                            parti.save(function(err) {
+                                if (err) {
+                                    console.log(err);
+                                }
+                                else{
+                                    customGetFxn(input.name);        
+                                }
+                            });
+                        }
+                    });                       
+                }
+            });                
+        });
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        /***********************
+        *******FUNCTIONS
+        ***********************/
+        function customGetFxn(input){
             //SEND OUT THE USER INFO
             Participant.find({name:input}).exec(function(err, participants) {
                 if (err) {
@@ -101,7 +350,7 @@ var totalWeeks=10;
                             arr=[],
                             sorted,
                             ranks;
-                        for(x=0; x<1; x++){//participants.length; x++){
+                        for(x=0; x<participants.length; x++){
                             //for graph
                             myUser=participants[x];
                             newUserData={};
@@ -132,8 +381,6 @@ var totalWeeks=10;
                             userStats[x].rank=ranks[x];
                         }
                         
-                        console.log(userStats);
-                        
                         //benchmark values
                         newUserData={};
                         newArray=[];
@@ -144,48 +391,14 @@ var totalWeeks=10;
                             newArray.push(newValue);
                         }
                         newUserData.values=newArray;
-//                        allData.push(newUserData);
+                        allData.push(newUserData);
                         
                         output.graphData=allData;
                         output.userStats=userStats;
                         io.emit('sendUserGraph', output);
                     }
                 });            
-            });
-        });        
-        
-        /****
-        ADD WEIGHT TO A USER
-            NEED TO ADD TO WEIGHT HISTORY AND GRAPH NUMBERS
-            SEND BACK UPDATED USER DATA
-            HAVE THE CLIENT UPDATE THE GRAPH DATA AND DIGEST
-        ****/
-        socket.on('addWeight', function(input){
-            Participant.findById(input.userId).exec(function(err, parti) {
-                if (err) {
-                    console.log(err);
-                } else {                    
-                    parti.weightHistory.splice(input.week-1, 1,input.weightInput);
-                    parti.graphNumbers.splice(input.week-1,1,parseFloat(input.weightInput/parti.startingWeight));
-                    
-                    parti.save(function(err) {
-                        if (err) {
-                            console.log(err);
-                        } else {
-                            Participant.findById(input.userId).exec(function(err, part) {
-                                if (err) {
-                                    console.log(err);
-                                } else {
-                                }
-                                    io.emit('weightAdded', part);
-                            })                
-                        }
-                    });                    
-                }
-            });   
-        });
-        
-        
-    });          
-    
+            });            
+        };
+    });
 };

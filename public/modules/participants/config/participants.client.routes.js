@@ -5,6 +5,14 @@ angular.module('participants').config(['$stateProvider',
 	function($stateProvider) {
 		// Participants state routing
 		$stateProvider.
+		state('rules', {
+			url: '/rules',
+			templateUrl: 'modules/participants/views/rules.client.view.html'
+		}).
+		state('homepg', {
+			url: '/homepg',
+			templateUrl: 'modules/participants/views/homepg.client.view.html'
+		}).
 		state('listParticipants', {
 			url: '/participants',
 			templateUrl: 'modules/participants/views/list-participants.client.view.html'

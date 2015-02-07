@@ -9,13 +9,13 @@ angular.module('users').config(['$stateProvider',
 //			url: '/weightindex',
 //			templateUrl: 'modules/users/views/weightindex.client.view.html'
 //		}).
-		state('initialweight', {
-			url: '/initialweight',
-			templateUrl: 'modules/users/views/initialweight.client.view.html'
-		}).
 		state('set-weight', {
 			url: '/set-weight',
 			templateUrl: 'modules/users/views/set-weight.client.view.html'
+		}).
+		state('weight-index', {
+			url: '/home',
+			templateUrl: 'modules/users/views/weightindex.client.view.html'
 		}).
 		state('profile', {
 			url: '/settings/profile',

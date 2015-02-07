@@ -10,7 +10,7 @@ angular.module('core').config(['$stateProvider', '$urlRouterProvider',
 		$stateProvider.
 		state('home', {
 			url: '/',
-			templateUrl: 'modules/users/views/weightindex.client.view.html'
+			templateUrl: 'modules/participants/views/homepg.client.view.html'
 		});
 	}
 ]);

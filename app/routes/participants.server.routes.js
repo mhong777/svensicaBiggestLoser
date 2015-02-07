@@ -8,7 +8,19 @@ module.exports = function(app) {
 	app.route('/participants')
 		.get(participants.list)
 		.post(users.requiresLogin, participants.create);
+    
+    app.route('/getByName')
+        .post(participants.getByName);
+    
+    app.route('/getMyStats')
+        .post(participants.getMyStats);    
 
+    app.route('/addWeight')
+        .post(participants.addWeight);    
+    
+    app.route('/setInitialWeight')
+        .post(participants.setInitialWeight);
+    
 	app.route('/participants/:participantId')
 		.get(participants.read)
 		.put(users.requiresLogin, participants.hasAuthorization, participants.update)

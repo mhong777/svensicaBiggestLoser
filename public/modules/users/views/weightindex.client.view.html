@@ -1,7 +1,7 @@
 <section data-ng-controller="WeightindexController">
     <div class="row topRow">
-        <h3>My Progress</h3>    
-        <div class="col-md-4">            
+       <h3>My Stats</h3>
+        <div class="col-md-4">
             <table class="table table-striped progressTable">
                <thead>
                    <tr>
@@ -11,7 +11,7 @@
                    </tr>
                </thead>
                 <tbody>
-                    <tr ng-repeat="stat in myStats">
+                    <tr ng-repeat="stat in myStats | limitTo: weekNum">
                         <td>{{$index+1}}</td>
                         <td>{{stat.weight}}</td>
                         <td>{{stat.progress}}%</td>
@@ -19,17 +19,32 @@
                 </tbody>
             </table>            
         </div>        
-        <div class="col-md-8" id="weightEnter">
+        <div class="col-md-8" id="weightEnter" ng-hide="weekCheck">
             <span>Enter Weight for Week {{weekNum}}</span><br/>
             <input type="number" id="weightInput" name="weightInput" data-ng-model="weightInput"><br/>        
-            <button class="btn btn-large btn-primary" ng-click="addWeight()">Submit</button>
+            <button class="btn btn-large btn-primary" ng-click="addWeight()">Submit</button><br/>
+            <span class="error" ng-hide="inputError">I don't think that's possible</span>
+        </div>            
+        <div class="col-md-8" id="weightEnter" ng-show="weekCheck">
+            <span>Come back in a week to enter your weight</span>
         </div>            
     </div>
+    <div class="row">
+        <div class="col-md-12">            
+            <center>
+                <h4>
+                    {{msg1}}<br/>
+                    {{msg2}}<br/><br/>
+                    {{msg3}}
+                    
+                </h4>
+            </center>
+        </div>
+    </div>    
     
     <div class="row topRow">
         <h3>Standings</h3>       
-        <div class="col-md-4">
-            
+        <div class="col-md-4">            
             <table class="table table-striped">
                <thead>
                    <tr>
@@ -50,19 +65,9 @@
             </table>
         </div>
         <div class="col-md-8">
-            <nvd3-line-chart
-                data="graphData"
-                showXAxis="true"
-                showYAxis="true"
-                tooltips="true"
-                interactive="true">
-            </nvd3-line-chart>                
+        <nvd3-line-chart data="graphData"  id='multiline' showXAxis="true" showYAxis="true" showLegend='true' xAxisLabel='Week' yAxisLabel='% to goal' useInteractiveGuideLine="true" objectEquality="true" tooltips="true">
+            <svg style='width:100%; height:20em; display:block;'></svg>
+        </nvd3-line-chart>           
         </div>
-    </div>
-   
-    <br/><br/>
-    {{graphData}}
-    <br/><br/>
-    {{exampleData}}
-    
+    </div>   
 </section>

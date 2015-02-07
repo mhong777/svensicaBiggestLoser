@@ -17,7 +17,7 @@
 
 #weightEnter{
     text-align: center;
-    font-size: 3em;
+    font-size: 2em;
     
 }
 #weightInput{
@@ -28,4 +28,7 @@
 }
 .progressTable{
     text-align: center;
+}
+.error{
+    color:red;
 }
