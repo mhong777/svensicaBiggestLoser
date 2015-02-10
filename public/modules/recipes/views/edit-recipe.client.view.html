@@ -1,0 +1,39 @@
+<section data-ng-controller="RecipesController" data-ng-init="findOne()">
+    <div class="page-header">
+        <h1>View and Edit Recipe</h1>
+    </div>
+    <div class="col-md-12">
+        <form class="form-horizontal" data-ng-submit="update()" novalidate>
+            <fieldset>
+                <div class="form-group">
+                    <label class="control-label" for="name">Name</label>
+                    <div class="controls">
+                        <input type="text" data-ng-model="recipe.name" id="name" class="form-control" placeholder="Name" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label" for="name">Link: </label><br/>
+                    <a ng-href="{{recipe.link}}" target="_blank">{{recipe.link}}</a><br/>
+                    <div class="controls">
+                        <input type="text" data-ng-model="recipe.link" id="link" class="form-control" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label" for="name">Notes</label>
+                    <div class="controls">
+                        <input class="form-control" rows="3" type="text" data-ng-model="recipe.notes" id="notes" required>
+                    </div>
+                </div>
+                
+                
+                
+                <div class="form-group">
+                    <input type="submit" value="Update" class="btn btn-default">
+                </div>
+				<div data-ng-show="error" class="text-danger">
+					<strong data-ng-bind="error"></strong>
+				</div>
+            </fieldset>
+        </form>
+    </div>
+</section>
