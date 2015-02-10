@@ -10,7 +10,7 @@ angular.module('users').controller('WeightindexController', ['$scope', '$statePa
             
             if(!Authentication.user){
                 $location.path('/');
-            }
+            }            
             else{
                 var req={};
                 req.name=Authentication.user.displayName;
@@ -34,18 +34,24 @@ angular.module('users').controller('WeightindexController', ['$scope', '$statePa
                             success(function(data, status){
                                 $scope.userData = data;
             //                    console.log($scope.userData);
-                                //have to spell this out for ng-repeat
-                                $scope.weightHistory=$scope.userData.weightHistory;
-
-                                //set the placeholder
-                                if($scope.userData.weightHistory[$scope.weekNum-1]){
-                                    $scope.weightInput=$scope.userData.weightHistory[$scope.weekNum-1];
+                                //make sure they set the initial weight
+                                if(!$scope.userData.startingWeight){
+                                    $location.path('/set-weight');    
                                 }
                                 else{
-                                    $scope.weightInput=$scope.userData.weightHistory[$scope.userData.weightHistory.length-1];
-                                }
+                                    //have to spell this out for ng-repeat
+                                    $scope.weightHistory=$scope.userData.weightHistory;
 
-                                $scope.setMsgs();
+                                    //set the placeholder
+                                    if($scope.userData.weightHistory[$scope.weekNum-1]){
+                                        $scope.weightInput=$scope.userData.weightHistory[$scope.weekNum-1];
+                                    }
+                                    else{
+                                        $scope.weightInput=$scope.userData.weightHistory[$scope.userData.weightHistory.length-1];
+                                    }
+
+                                    $scope.setMsgs();                                    
+                                }
                             });                    
                 });
 

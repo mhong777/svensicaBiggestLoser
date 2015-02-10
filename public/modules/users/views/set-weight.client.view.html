@@ -1,19 +1,28 @@
-<section class="row" data-ng-controller="weightController">
-	<div class="col-xs-offset-2 col-xs-8 col-md-offset-5 col-md-2">
-		<form data-ng-submit="setWeight()" class="signin form-horizontal" novalidate autocomplete="off">
-			<fieldset>
-				<div class="form-group">
-					<label for="currWeight">What is your current weight</label>
-					<input type="number" required id="currWeight" name="firstName" class="form-control" data-ng-model="input.currWeight" placeholder="0">
-				</div>
-				<div class="form-group">
-					<label for="lastName">What is your target weight?</label>
-					<input type="number" id="tarWeight" name="tarWeight" class="form-control" data-ng-model="input.tarWeight" placeholder="0">
-				</div>
-				<div class="text-center form-group">
-					<button type="submit" class="btn btn-large btn-primary">Submit</button>
-				</div>				
-			</fieldset>
-		</form>
-	</div>
+<section data-ng-controller="weightController">
+   <br/><br/>
+    <div class="row">
+        <div class="col-xs-offset-2 col-xs-8 col-md-offset-5 col-md-2">
+            <form data-ng-submit="setWeight()" class="signin form-horizontal" novalidate autocomplete="off">
+                <fieldset>
+                    <div class="form-group">
+                        <label for="currWeight">What is your current weight</label>
+                        <input type="number" required id="currWeight" name="firstName" class="form-control" data-ng-model="input.currWeight" placeholder="0">
+                    </div>
+                    <div class="form-group">
+                        <label for="lastName">What is your target weight?</label>
+                        <input type="number" id="tarWeight" name="tarWeight" class="form-control" data-ng-model="input.tarWeight" placeholder="0">
+                    </div>
+                    <div class="text-center form-group">
+                        <button type="submit" class="btn btn-large btn-primary">Submit</button>
+                    </div>				
+                </fieldset>
+            </form>		            
+        </div>        
+    </div>
+    <div class="row">
+        <div class="col-md-offset-2 col-md-8">
+            <h4><center>don't worry - only you will ever see weights that you enter</center></h4>
+        </div>
+    </div>
+    	
 </section>
