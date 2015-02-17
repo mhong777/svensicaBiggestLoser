@@ -153,10 +153,10 @@ angular.module('users').controller('WeightindexController', ['$scope', '$statePa
             console.log('milestone ' + ($scope.weekNum/4).toFixed(0) + ' ' + $scope.milestoneNum);
             if($scope.milestoneNum==0){
                 console.log('0 milestone');
-                $scope.msg2= 'You have ' + ($scope.userData.weightHistory[$scope.userData.weightHistory.length-1]-$scope.userData.milestones[$scope.milestoneNum]) + ' lbs to go to get to it!';
+                $scope.msg2= 'You have ' + ($scope.userData.weightHistory[$scope.userData.weightHistory.length-1]-$scope.userData.milestones[$scope.milestoneNum]).toFixed(2) + ' lbs to go to get to it!';
             }
             else if($scope.userData.milestones[$scope.milestoneNum-1]<$scope.userData.weightHistory[$scope.userData.weightHistory.length-1]){
-                $scope.msg2= 'You have ' + ($scope.userData.weightHistory[$scope.userData.weightHistory.length-1]-$scope.userData.milestones[$scope.milestoneNum-1]) + ' lbs to go to get to it!';
+                $scope.msg2= 'You have ' + ($scope.userData.weightHistory[$scope.userData.weightHistory.length-1]-$scope.userData.milestones[$scope.milestoneNum-1]).toFixed(2) + ' lbs to go to get to it!';
             }
             else{
                 $scope.msg2='Congrats you\'ve reached your next milestone. But don\'t slack off!';
@@ -165,7 +165,7 @@ angular.module('users').controller('WeightindexController', ['$scope', '$statePa
             //total
             if($scope.userData.targetWeight<$scope.userData.weightHistory[$scope.userData.weightHistory.length-1]){
 //                console.log('other true');
-                $scope.msg3=($scope.userData.weightHistory[$scope.userData.weightHistory.length-1]-$scope.userData.targetWeight) + ' lbs to go to your overall target';
+                $scope.msg3=($scope.userData.weightHistory[$scope.userData.weightHistory.length-1]-$scope.userData.targetWeight).toFixed(2) + ' lbs to go to your overall target';
             }
             else{
                 $scope.msg3='Congrats you\'ve reached your goal =) Now keep it off';
