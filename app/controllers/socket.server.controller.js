@@ -25,8 +25,12 @@ TIMER FUNCTION
     
     db.dropDatabase()
 *****/
+//    var sampleDate=new Date("July 21, 1983 04:15:00");
+//    console.log(sampleDate.getHours());
+    
 var intervalId = setInterval(function() {
     today = new Date(); // Create a Date object to find out what time it is
+//    console.log(today.getHours());
     if(today.getHours() === 4){ // Check the time and iterate at 4am - need to ping every hour
         Gvar.find().exec(function(err, gvars) {
             if (err) {
@@ -37,14 +41,18 @@ var intervalId = setInterval(function() {
                 //check what week it is
                 today=today.getTime();
                 
+//                difference=Math.floor(Math.abs(today-startDate)/ONE_WEEK) + 1;
+//                console.log(difference);
+                
+                
                 //case if challenge hasn't started
                 if(startDate>today){
                     gvar.week=1;
                 }
                 else{
                     //calculate week
-                    difference=Math.floor(Math.abs(today-startDate)/ONE_WEEK);
-                    gvar.week=difference+1;
+                    difference=Math.floor(Math.abs(today-startDate)/ONE_WEEK)+1;
+                    gvar.week=difference;
                 }
                 
                 if(difference===16){
@@ -62,7 +70,7 @@ var intervalId = setInterval(function() {
             }
         });    
     }    
-}, 600000);  //pings every hour
+}, 360000);  //pings every hour
 //600000    
 
     
