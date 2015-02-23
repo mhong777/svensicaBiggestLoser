@@ -11,6 +11,7 @@ var totalWeeks=16,
     gvar,
     startDate = new Date(2015, 1, 9),
     ONE_WEEK = 1000 * 60 * 60 * 24 * 7,
+    ONE_HOUR = 1000 * 60 * 60,
     difference,
     currentWeek;
     console.log(startDate + 'startDate');
@@ -30,7 +31,7 @@ TIMER FUNCTION
     
 var intervalId = setInterval(function() {
     today = new Date(); // Create a Date object to find out what time it is
-//    console.log(today.getHours());
+    console.log(today.getHours());
     if(today.getHours() === 4){ // Check the time and iterate at 4am - need to ping every hour
         Gvar.find().exec(function(err, gvars) {
             if (err) {
@@ -70,7 +71,7 @@ var intervalId = setInterval(function() {
             }
         });    
     }    
-}, 360000);  //pings every hour
+}, ONE_HOUR);  //pings every hour
 //600000    
 
     

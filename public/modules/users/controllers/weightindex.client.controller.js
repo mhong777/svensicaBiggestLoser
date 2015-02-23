@@ -136,8 +136,8 @@ angular.module('users').controller('WeightindexController', ['$scope', '$statePa
         $scope.setMsgs=function(){
             //set the msg - first is week num, the amount to next milestone then amount to target
             console.log('week num ' + $scope.weekNum);
-            if($scope.weekNum % 4){
-                $scope.weekDiff=4-($scope.weekNum % 4);
+            if(($scope.weekNum-1) % 4){
+                $scope.weekDiff=4-(($scope.weekNum-1) % 4);
                 if($scope.weekDiff>1){
                     $scope.msg1=$scope.weekDiff + ' weeks to go until your next milestone';
                 }
@@ -149,8 +149,8 @@ angular.module('users').controller('WeightindexController', ['$scope', '$statePa
                 $scope.msg1='It\'s milestone week. Time to PUSH';
             }
             //milestone            
-            $scope.milestoneNum=($scope.weekNum/4).toFixed(0);
-            console.log('milestone ' + ($scope.weekNum/4).toFixed(0) + ' ' + $scope.milestoneNum);
+            $scope.milestoneNum=(($scope.weekNum-1)/4).toFixed(0);
+            console.log('milestone ' + (($scope.weekNum-1)/4).toFixed(0) + ' ' + $scope.milestoneNum);
             if($scope.milestoneNum==0){
                 console.log('0 milestone');
                 $scope.msg2= 'You have ' + ($scope.userData.weightHistory[$scope.userData.weightHistory.length-1]-$scope.userData.milestones[$scope.milestoneNum]).toFixed(2) + ' lbs to go to get to it!';
