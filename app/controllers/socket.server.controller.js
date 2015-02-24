@@ -20,6 +20,8 @@ var totalWeeks=16,
 /*****
 TIMER FUNCTION
     need to just combine the if date 
+    use svensicabiggestloser-dev
+    
     db.gvars.insert({name: 'vars', week:1})
     
     db.gvars.remove({})

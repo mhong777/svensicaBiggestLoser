@@ -196,12 +196,40 @@ exports.addWeight = function(req, res) {
                             parti.pointArray.splice(16,1,0);
                         }                                
                     }
+                    
+                    //make sure to add in weights for previous
+                    var wLen=parti.weightHistory.length,
+                        week=req.body.week,
+                        lastW=parti.weightHistory[wLen-1],
+                        p,
+                        currDiff,
+                        goalDiff,
+                        graphNum;
+                        
+                    
+                    console.log(parti.weightHistory);
+                    
+                    if(wLen<week-1){
+                        console.log('missed a couple');
+                        for(p=wLen; p<week-1;p++){
+                            parti.weightHistory.splice(wLen, 1,lastW);
+                            currDiff = parti.startingWeight - lastW;
+                            goalDiff = parti.startingWeight - parti.targetWeight;
+                            graphNum = parseFloat(currDiff/goalDiff*100).toFixed(2);
+                            
+                            parti.graphNumbers.splice(req.body.week-1,1,graphNum);
+                        }
+                    }
+                    
+                    console.log(parti.weightHistory);
+                    
                     parti.weightHistory.splice(req.body.week-1, 1,req.body.weightInput);
 //                    newValue=[y+1,parseFloat(((1-myUser.graphNumbers[y])*100).toFixed(2))];
                     
-                    var currDiff = parti.startingWeight - req.body.weightInput,
-                        goalDiff = parti.startingWeight - parti.targetWeight,
-                        graphNum = parseFloat(currDiff/goalDiff*100).toFixed(2);
+                    //add to graph
+                    currDiff = parti.startingWeight - req.body.weightInput;
+                    goalDiff = parti.startingWeight - parti.targetWeight;
+                    graphNum = parseFloat(currDiff/goalDiff*100).toFixed(2);
                     
                     parti.graphNumbers.splice(req.body.week-1,1,graphNum);
 
