@@ -28,53 +28,7 @@ TIMER FUNCTION
     
     db.dropDatabase()
 *****/
-//    var sampleDate=new Date("July 21, 1983 04:15:00");
-//    console.log(sampleDate.getHours());
-    
-var intervalId = setInterval(function() {
-    today = new Date(); // Create a Date object to find out what time it is
-    console.log(today.getHours());
-    if(today.getHours() === 4){ // Check the time and iterate at 4am - need to ping every hour
-        Gvar.find().exec(function(err, gvars) {
-            if (err) {
-                console.log(err);
-            } else {
-                gvar=gvars[0];
-                
-                //check what week it is
-                today=today.getTime();
-                
-//                difference=Math.floor(Math.abs(today-startDate)/ONE_WEEK) + 1;
-//                console.log(difference);
-                
-                
-                //case if challenge hasn't started
-                if(startDate>today){
-                    gvar.week=1;
-                }
-                else{
-                    //calculate week
-                    difference=Math.floor(Math.abs(today-startDate)/ONE_WEEK)+1;
-                    gvar.week=difference;
-                }
-                
-                if(difference===16){
-                    clearInterval(intervalId);
-                }
-                else{
-                    gvar.save(function(err){
-                        if(err){
-                            console.log(err);
-                        }
-                    });
-                    console.log(gvar);
-                    socket.broadcast.emit('newWeek', gvar);                    
-                }
-            }
-        });    
-    }    
-}, ONE_HOUR);  //pings every hour
-//600000    
+ 
 
     
 //        Gvar.find().exec(function(err, gvars) {
@@ -106,6 +60,56 @@ var intervalId = setInterval(function() {
     
     
     io.on('connection', function(socket){
+        //    var sampleDate=new Date("July 21, 1983 04:15:00");
+        //    console.log(sampleDate.getHours());
+
+        var intervalId = setInterval(function() {
+            today = new Date(); // Create a Date object to find out what time it is
+            console.log(today.getHours());
+            if(today.getHours() === 14){ // Check the time and iterate at 4am - need to ping every hour
+                Gvar.find().exec(function(err, gvars) {
+                    if (err) {
+                        console.log(err);
+                    } else {
+                        gvar=gvars[0];
+
+                        //check what week it is
+                        today=today.getTime();
+
+        //                difference=Math.floor(Math.abs(today-startDate)/ONE_WEEK) + 1;
+        //                console.log(difference);
+
+
+                        //case if challenge hasn't started
+                        if(startDate>today){
+                            gvar.week=1;
+                        }
+                        else{
+                            //calculate week
+                            difference=Math.floor(Math.abs(today-startDate)/ONE_WEEK)+1;
+                            gvar.week=difference;
+                        }
+
+                        if(difference===17){
+                            clearInterval(intervalId);
+                        }
+                        else{
+                            gvar.save(function(err){
+                                if(err){
+                                    console.log(err);
+                                }
+                            });
+                            console.log(gvar);
+                            socket.broadcast.emit('newWeek', gvar);                    
+                        }
+                    }
+                });    
+            }    
+        }, ONE_HOUR);  //pings every hour
+        //600000           
+        
+        
+        
         
         
         socket.broadcast.emit('user connected');
