@@ -24,7 +24,7 @@ module.exports = function() {
 				console.log('\x1b[31m', 'NODE_ENV is not defined! Using default development environment');
 			}
 
-			process.env.NODE_ENV = 'development';
+			process.env.NODE_ENV = 'production';
 		} else {
 			console.log('\x1b[7m', 'Application loaded using the "' + process.env.NODE_ENV + '" environment configuration');
 		}

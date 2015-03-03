@@ -3,7 +3,7 @@
 module.exports = {
 	db: 'mongodb://localhost/svensicabiggestloser-dev',
 	app: {
-		title: 'svensicaBiggestLoser - Development Environment'
+		title: 'svensicaBiggestLoser'
 	},
 	facebook: {
 		clientID: process.env.FACEBOOK_ID || 'APP_ID',
