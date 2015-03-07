@@ -55,7 +55,7 @@
                    </tr>
                </thead>
                 <tbody>
-                    <tr ng-repeat="user in userStats">
+                    <tr ng-repeat="user in userStats | orderBy:user.rank">
                         <td>{{user.rank}}</td>
                         <td>{{user.name}}</td>
                         <td>{{user.progress}}%</td>
