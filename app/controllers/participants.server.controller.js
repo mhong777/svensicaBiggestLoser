@@ -140,7 +140,7 @@ exports.addWeight = function(req, res) {
                     //need a way to track
                     //or only let ppl put in their weight once
                             if(currentWeek===5){
-                                if(input.weightInput<=parti.milestones[0]){
+                                if(req.body.weightInput<=parti.milestones[0]){
                                     parti.pointArray.splice(0,1,5);
                                 }
                                 else{
@@ -149,7 +149,7 @@ exports.addWeight = function(req, res) {
                             }
                             else if(currentWeek>5 && currentWeek<9){
                                 //6 7 8
-                                if(input.weightInput<=parti.milestones[0]){
+                                if(req.body.weightInput<=parti.milestones[0]){
                                     parti.pointArray.splice(currentWeek-5,1,0);
                                 }
                                 else{
@@ -157,7 +157,7 @@ exports.addWeight = function(req, res) {
                                 }                                
                             }
                             else if(currentWeek===9){
-                                if(input.weightInput<=parti.milestones[1]){
+                                if(req.body.weightInput<=parti.milestones[1]){
                                     parti.pointArray.splice(5,1,5);
                                 }
                                 else{
@@ -165,7 +165,7 @@ exports.addWeight = function(req, res) {
                                 }                                
                             }
                             else if(currentWeek>9 && currentWeek<13){
-                                if(input.weightInput<=parti.milestones[1]){
+                                if(req.body.weightInput<=parti.milestones[1]){
                                     parti.pointArray.splice(currentWeek-9+5,1,0);
                                 }
                                 else{
@@ -173,7 +173,7 @@ exports.addWeight = function(req, res) {
                                 }                                
                             }
                             else if(currentWeek===13){
-                                if(input.weightInput<=parti.milestones[2]){
+                                if(req.body.weightInput<=parti.milestones[2]){
                                     parti.pointArray.splice(9,1,5);
                                 }
                                 else{
@@ -181,7 +181,7 @@ exports.addWeight = function(req, res) {
                                 }                                                                
                             }
                             else if(currentWeek>13 && currentWeek<17){
-                                if(input.weightInput<=parti.milestones[2]){
+                                if(req.body.weightInput<=parti.milestones[2]){
                                     parti.pointArray.splice(currentWeek-13+9,1,0);
                                 }
                                 else{
@@ -189,14 +189,13 @@ exports.addWeight = function(req, res) {
                                 }                                
                             }
                             else if(currentWeek===17){
-                                if(input.weightInput<=parti.milestones[3]){
+                                if(req.body.weightInput<=parti.milestones[3]){
                                     parti.pointArray.splice(17,1,5);
                                 }
                                 else{
                                     parti.pointArray.splice(17,1,0);
                                 }                                
-                            }
-                    
+                            }                    
                     //make sure to add in weights for previous
                     var wLen=parti.weightHistory.length,
                         week=req.body.week,
