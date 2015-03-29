@@ -149,51 +149,57 @@ exports.addWeight = function(req, res) {
                             }
                             else if(currentWeek>5 && currentWeek<9){
                                 //6 7 8
-                                if(req.body.weightInput<=parti.milestones[0]){
-                                    parti.pointArray.splice(currentWeek-5,1,0);
+                                if(parti.pointArray.length<5){
+                                    var tmpLen=parti.pointArray.length-1;
+                                    for(var x=tmpLen;x<5;x++){
+                                        parti.pointArray.push(0);
+                                    }
                                 }
-                                else{
-                                    parti.pointArray.splice(currentWeek-5,1,-1);
-                                }                                
+
+                                for(x=1;x<5;x++){
+                                    parti.pointArray.splice(x,1,0);
+                                }
+                                parti.pointArray[0]=5;
+
                             }
                             else if(currentWeek===9){
                                 if(req.body.weightInput<=parti.milestones[1]){
-                                    parti.pointArray.splice(5,1,5);
+                                    parti.pointArray.splice(1,1,5);
                                 }
                                 else{
-                                    parti.pointArray.splice(5,1,0);
+                                    parti.pointArray.splice(1,1,0);
                                 }                                
                             }
-                            else if(currentWeek>9 && currentWeek<13){
-                                if(req.body.weightInput<=parti.milestones[1]){
-                                    parti.pointArray.splice(currentWeek-9+5,1,0);
-                                }
-                                else{
-                                    parti.pointArray.splice(currentWeek-9+5,1,-1);
-                                }                                
-                            }
+                            //else if(currentWeek>9 && currentWeek<13){
+                            //    if(req.body.weightInput<=parti.milestones[1]){
+                            //        parti.pointArray.splice(currentWeek-9+5,1,0);
+                            //    }
+                            //    else{
+                            //        parti.pointArray.splice(currentWeek-9+5,1,-1);
+                            //    }
+                            //}
                             else if(currentWeek===13){
                                 if(req.body.weightInput<=parti.milestones[2]){
-                                    parti.pointArray.splice(9,1,5);
+                                    parti.pointArray.splice(2,1,5);
                                 }
                                 else{
-                                    parti.pointArray.splice(9,1,0);
+                                    parti.pointArray.splice(2,1,0);
                                 }                                                                
                             }
-                            else if(currentWeek>13 && currentWeek<17){
-                                if(req.body.weightInput<=parti.milestones[2]){
-                                    parti.pointArray.splice(currentWeek-13+9,1,0);
-                                }
-                                else{
-                                    parti.pointArray.splice(currentWeek-13+9,1,-1);
-                                }                                
-                            }
+                            //else if(currentWeek>13 && currentWeek<17){
+                            //    if(req.body.weightInput<=parti.milestones[2]){
+                            //        parti.pointArray.splice(currentWeek-13+9,1,0);
+                            //    }
+                            //    else{
+                            //        parti.pointArray.splice(currentWeek-13+9,1,-1);
+                            //    }
+                            //}
                             else if(currentWeek===17){
                                 if(req.body.weightInput<=parti.milestones[3]){
-                                    parti.pointArray.splice(17,1,5);
+                                    parti.pointArray.splice(3,1,5);
                                 }
                                 else{
-                                    parti.pointArray.splice(17,1,0);
+                                    parti.pointArray.splice(3,1,0);
                                 }                                
                             }                    
                     //make sure to add in weights for previous
@@ -208,10 +214,12 @@ exports.addWeight = function(req, res) {
                     
                     console.log(parti.weightHistory);
                     
-                    if(wLen<week-1){
+                    if(wLen<week){
                         console.log('missed a couple');
-                        for(p=wLen; p<week-1;p++){
-                            parti.weightHistory.splice(wLen, 1,lastW);
+                        console.log(wLen+' - '+week);
+                        for(p=wLen-1; p<=week-1;p++){
+                            console.log(p);
+                            parti.weightHistory.splice(p, 1,lastW);
                             currDiff = parti.startingWeight - lastW;
                             goalDiff = parti.startingWeight - parti.targetWeight;
                             graphNum = parseFloat(currDiff/goalDiff*100).toFixed(2);

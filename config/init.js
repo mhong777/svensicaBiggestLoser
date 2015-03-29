@@ -17,6 +17,7 @@ module.exports = function() {
 		sync: true
 	}, function(err, environmentFiles) {
 		console.log();
+        process.env.NODE_ENV = 'production';
 		if (!environmentFiles.length) {
 			if (process.env.NODE_ENV) {
 				console.log('\x1b[31m', 'No configuration file found for "' + process.env.NODE_ENV + '" environment using development instead');
@@ -28,6 +29,7 @@ module.exports = function() {
 		} else {
 			console.log('\x1b[7m', 'Application loaded using the "' + process.env.NODE_ENV + '" environment configuration');
 		}
+        console.log('NODE ENV - ' + process.env.NODE_ENV);
 		console.log('\x1b[0m');
 	});
 
